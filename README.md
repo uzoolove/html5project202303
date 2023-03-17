@@ -4,7 +4,7 @@
 ## 개발환경 구축
 ### 프로그램 설치
 * Platform: Windows 64-bit
-1. Nodejs 설치 [Download Pages](https://nodejs.org/en/download/){:target="_blank"}
+1. Nodejs 설치 [Download Pages](https://nodejs.org/en/download/)
 2. Visual Studio Code 설치 [Download Pages](https://code.visualstudio.com/download)
 3. Chrome 브라우저 설치 [Download Pages](https://www.google.com/chrome)
 4. MongoDB 설치 [Download Pages](https://www.mongodb.com/try/download/community)
