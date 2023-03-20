@@ -1,95 +1,109 @@
-var MongoClient = require('mongodb').MongoClient;
-var util = require('util');
+const util = require('util');
 var db;
-// DB 접속
 
+// TODO: DB 접속
+
+
+async function task(){
+  console.log(await todo1(), '\n');
+  console.log(await todo2(), '\n');
+  // console.log(await todo3(), '\n');
+  // console.log(await todo4(), '\n');
+  // console.log(await todo5(), '\n');
+  // console.log(await todo6(), '\n');
+  // console.log(await todo7(), '\n');
+  
+  // console.log(await todo8(), '\n');
+  // console.log(await todo2(), '\n');
+
+  // console.log(await todo9('퍼가요~~~'), '\n');
+  // console.log(await todo9('감사합니다.'), '\n');
+  // console.log(await todo9('ㅇㄷ'), '\n');
+  // console.log(await todo2(), '\n');
+
+  // console.log(await todo10(), '\n');
+  // console.log(await todo2(), '\n');
+}
 
 // 등록할 게시물
-var b1 = {no: 1, name: "admin", title: "[공지]게시판 사용규칙 안내입니다.", content: "잘 쓰세요."};
-var b2 = {no: 2, name: "kim", title: "첫번째 글을 올리네요.", content: "잘 보이나요?"};
-var b3 = {no: 3, name: "lee", title: "그렇다면 두번째 글은...", content: "잘 보이겠죠?"};
+var b1 = {_id: 1, name: "admin", title: "[공지] 게시판 사용규칙 안내입니다.", content: "잘 쓰세요."};
+var b2 = {_id: 2, name: "kim", title: "첫번째 글을 올리네요.", content: "잘 보이나요?"};
+var b3 = {_id: 3, name: "lee", title: "그렇다면 두번째 글은...", content: "잘 보이겠죠?"};
 
-// 로그 메세지 출력
-function myLog(str, result){
-	console.info(str);
-	console.debug(util.inspect(result) + "\n");
-}
-
-// TODO 1. board 컬렉션에 데이터 등록
 // insertOne({등록할 문서}), insertMany([{등록할 문서}, {등록할 문서}])
-function todo1(){
-	
+async function todo1(){  
+  
+  return 'TODO 1. board 컬렉션에 데이터 등록';
 }
 
-// TODO 2. 모든 board 데이터의 모든 속성 조회
 // find()
-function todo2(){
-	
+async function todo2(){
+  console.log('TODO 2. 모든 board 데이터의 모든 속성 조회');
+  
 }
 
-// TODO 3. 데이터 조회(kim이 작성한 게시물 조회)
 // find({검색조건})
-function todo3(){
+async function todo3(){
+  console.log('TODO 3. 데이터 조회(kim이 작성한 게시물 조회)');
 	
 }
 
-// TODO 4. 모든 board 데이터의 작성자 속성만 조회(_id 포함)
 // find({검색조건}, {projection: {출력컬럼}})
-function todo4(){
+async function todo4(){
+  console.log('TODO 4. 모든 board 데이터의 작성자 속성만 조회(_id 포함)');  
 	
 }
 
-// TODO 5. kim이 작성한 게시물의 제목 조회(_id 미포함)
 // find({검색조건}, {projection: {출력컬럼}})
-function todo5(){
-	
+async function todo5(){
+  console.log('TODO 5. kim이 작성한 게시물의 제목 조회(_id 미포함)');
+  
 }
 
-// TODO 6. 첫번째 게시물 조회(1건)
 // findOne()
-function todo6(){
-	
+async function todo6(){
+  console.log('TODO 6. 첫번째 게시물 조회(1건)');
+  
 }
 
-// TODO 7. 게시물 조회(lee가 작성한 데이터 1건 조회)
 // findOne({검색조건})
-function todo7(){
-	
+async function todo7(){
+  console.log('TODO 7. 게시물 조회(lee가 작성한 데이터 1건 조회)');
+  
 }
 
-// TODO 8. 게시물 수정(3번 게시물의 내용 수정)
 // updateOne({검색조건}, {수정할 문서})
-function todo8(){
+async function todo8(){
+  console.log('TODO 8. 게시물 수정(3번 게시물의 내용 수정)');
 	
 }
 
-// 전체 게시물을 조회하여 지정한 문자열을 출력하고
-// next 함수를 호출한다.
-function list(str, next){
-	db.board.find().toArray(function(err, result){
-		myLog(str, result);
-		if(next){
-			next();
-		}
-	});
-}
-
-// TODO 9. 1번 게시물에 댓글 추가
-function todo9(){
+async function todo9(reply){
+  console.log('TODO 9. 1번 게시물에 댓글 추가');
 	var comment = {
     name: '이영희',
-    content: '퍼가요~~~'
+    content: reply
   };
   
 }
 
-// TODO 10. 2번 게시물 삭제
 // deleteOne({검색 조건})
-function todo10(){
+async function todo10(){
+  console.log('TODO 10. 2번 게시물 삭제');
 	
 }
 
-
+// 1. 모든 쿠폰 목록을 조회한다.
+// 2. 쿠폰명, 판매시작일만 출력.
+// 3. 판매시작일의 내림차순으로 정렬.
+// 4. 한페이지당 5건 일때 2페이지를 조회.
+async function todo11(){
+  console.log('TODO 11. mulpang DB coupon collection 조회');
+  var data = [];
+  
+  console.log(data.length, '건 조회됨.');
+  return data;
+}
 
 
 
