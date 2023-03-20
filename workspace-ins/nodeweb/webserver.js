@@ -1,6 +1,7 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const mt = require('mimetype');
 
 const home = path.join(__dirname, 'design');
 
@@ -25,7 +26,8 @@ const server = http.createServer(function(req, res){
 
   var filename = req.url;
 
-  var mimeType = getMime(filename);
+  // var mimeType = getMime(filename);
+  var mimeType = mt.lookup(filename);
 
   // 비동기 방식
   fs.readFile(path.join(home, filename), function(err, data){
