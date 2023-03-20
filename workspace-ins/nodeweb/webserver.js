@@ -1,24 +1,10 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const mt = require('mimetype');
+// const mt = require('mimetype');
+const mt = require('./mimetypes');
 
 const home = path.join(__dirname, 'design');
-
-const mime = {
-  "html": "text/html",
-  "css": "text/css",
-  "js": "application/javascript",
-  "svg": "image/svg+xml"
-  // ......
-};
-
-function getMime(url){
-  // today.html => "text/html"
-  // layout.css => "text/css"
-  var extname = path.extname(url).substring(1);
-  return mime[extname];
-}
 
 const server = http.createServer(function(req, res){
   console.log(req.method, req.url, req.httpVersion);
@@ -27,7 +13,8 @@ const server = http.createServer(function(req, res){
   var filename = req.url;
 
   // var mimeType = getMime(filename);
-  var mimeType = mt.lookup(filename);
+  // var mimeType = mt.lookup(filename);
+  var mimeType = mt.getMime(filename);
 
   // 비동기 방식
   fs.readFile(path.join(home, filename), function(err, data){
