@@ -20,6 +20,23 @@ router.get('/coupons/:_id', async function(req, res, next) {
   res.render('detail', { coupon, toStar: MyUtil.toStar });
 });
 
+// 쿠폰 구매 화면
+router.get('/purchase/:_id', async function(req, res, next) {
+  var coupon = await model.buyCouponForm(Number(req.params._id));
+  res.render('buy', { coupon });
+});
+
+// 쿠폰 구매
+router.post('/purchase', async function(req, res, next) {
+  try{
+    var purchaseId = await model.buyCoupon(req.body);
+    res.end(String(purchaseId));
+  }catch(err){
+    res.json({errors: {message: err.message}});
+  }
+});
+
+
 router.get('/:page.html', function(req, res, next) {
   res.render(req.params.page);
 });

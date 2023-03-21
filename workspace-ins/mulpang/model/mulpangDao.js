@@ -105,7 +105,7 @@ module.exports.buyCouponForm = async function(_id){
     'image.detail': 1
 	};
 	// TODO 쿠폰 정보를 조회한다.
-	
+	return await db.coupon.findOne({_id}, {projection: fields});
 };
 
 // 쿠폰 구매
@@ -126,9 +126,19 @@ module.exports.buyCoupon = async function(params){
 	};
 
 	// TODO 구매 정보를 등록한다.
-	
-	// TODO 쿠폰 구매 건수를 하나 증가시킨다.
-	
+  try{
+    var sequence = await db.sequence.findOneAndUpdate({_id: 'purchase'}, {$inc: {seq: 1}});
+    document._id = sequence.value.seq;
+    var result = await db.purchase.insertOne(document);
+
+    // TODO 쿠폰 구매 건수를 하나 증가시킨다.
+    await db.coupon.updateOne({_id: document.couponId}
+                            , {$inc: {buyQuantity: document.quantity}});
+    return result.insertedId;
+  }catch(err){
+    console.error(err);
+    throw new Error('쿠폰 구매에 실패했습니다. 잠시 후 다시 시도하시기 바랍니다.');
+  }
 };	
 	
 // 추천 쿠폰 조회
