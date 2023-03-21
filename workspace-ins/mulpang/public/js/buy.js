@@ -17,8 +17,9 @@ function setBuyEvent(){
     event.preventDefault();
     var body = $(this).serialize();
     var result = await $.post('/purchase', body);
+    console.log(result);
     if(result.errors){
-      alert(result.errors.message);
+      alert(result.errors.msg);
     }else{
       alert('쿠폰 구매가 완료되었습니다.');
       location.href = '/';
