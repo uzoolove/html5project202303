@@ -27,7 +27,6 @@ router.get('/purchase/:_id', async function(req, res, next) {
   res.render('buy', { coupon });
 });
 
-// 쿠폰 구매
 const validatePurchase = [
   body('quantity').isInt({ min: 1 }).withMessage('수량을 1개 이상 정수로 입력하세요.'),
   body('cardNumber').isLength({ min: 16, max: 16 }).withMessage('16자리의 카드번호를 입력하세요.'),
@@ -40,6 +39,7 @@ const validatePurchase = [
     next();
   }
 ];
+// 쿠폰 구매
 router.post('/purchase', validatePurchase, async function(req, res, next) {
   try{
     var purchaseId = await model.buyCoupon(req.body);
@@ -49,9 +49,25 @@ router.post('/purchase', validatePurchase, async function(req, res, next) {
   }
 });
 
-
-router.get('/:page.html', function(req, res, next) {
-  res.render(req.params.page);
+// 근처 메뉴
+router.get('/location', async function(req, res, next){
+  res.render('location');
+});
+// 추천 메뉴
+router.get('/best', function(req, res, next){
+  res.render('best');
+});
+// top5 쿠폰 조회
+router.get('/topCoupon', async function(req, res, next){
+  res.json([]);
+});
+// 모두 메뉴
+router.get('/all', async function(req, res, next){
+  res.render('all');
+});
+// 쿠폰 남은 수량 조회
+router.get('/couponQuantity', async function(req, res, next){
+  res.end('success');
 });
 
 
