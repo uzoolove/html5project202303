@@ -11,42 +11,33 @@ $(function(){
 
  
 // 회원 정보를 수정한다.
-function updateMember(){
-	if($('#password').val() != $('#password2').val()){
-		alert('비밀번호와 비밀번호 확인이 맞지 않습니다.');
-	}else{
-		// 회원 수정을 요청한다.
-		$.ajax({
-			type: 'put',
-			url: '/users',
-			data: $(this).serialize(),			
-			success: function(result){
-				if(result.errors){
-					alert(result.errors.message);
-				}else{
-					alert('회원 수정이 완료되었습니다.');
-					window.location.reload();
-				}
-			}
-		});
-	}
-	return false;
+async function updateMember(event){
+  event.preventDefault(); // 브라우저의 기본 동작(submit) 취소
+  if($('#password').val() != $('#password2').val()){
+    alert('비밀번호와 비밀번호 확인이 맞지 않습니다.');
+  }else{
+    // 회원 수정을 요청한다.
+    var result = await $.ajax('/users', {
+      type: 'put',
+      data: $(this).serialize()
+    });
+    if(result.errors){
+      alert(result.errors.message);
+    }else{
+      alert('회원 정보 수정이 완료되었습니다.');
+      window.location.reload();
+    }
+  }
 }
 
 // 상품후기 입력
-function registEpilogue(){
-	$.ajax({
-		type: 'post',
-		url: '/users/epilogue',
-		data: $(this).serialize(),		
-		success: function(result){
-			if(result.errors){
-				alert(result.errors.message);
-			}else{
-				alert('쿠폰 사용 후기가 등록되었습니다.');
-				window.location.reload();
-			}
-		}
-	});
-	return false;
+async function registEpilogue(event){
+  event.preventDefault(); // 브라우저의 기본 동작(submit) 취소
+  var result = await $.post('/users/epilogue', $(this).serialize());
+  if(result.errors){
+    alert(result.errors.message);
+  }else{
+    alert('쿠폰 사용 후기가 등록되었습니다.');
+    window.location.reload();
+  }
 }
