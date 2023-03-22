@@ -31,12 +31,12 @@
                   <li class="discount">할인가격 : <em><%=coupon.price%></em></li>
                   <li class="remain">잔여수량<span><%=coupon.quantity-coupon.buyQuantity%>개</span></li>
                   <li class="term">판매기간 : 
-                    <time datetime="<%=coupon.useDate.start%>"><%=coupon.useDate.start%></time> ~
-                    <time datetime="<%=coupon.useDate.finish%>"><%=coupon.useDate.finish%></time>
-                  </li>
-                  <li class="expire">유효기간 : 
                     <time datetime="<%=coupon.saleDate.start%>"><%=coupon.saleDate.start%></time> ~
                     <time datetime="<%=coupon.saleDate.finish%>"><%=coupon.saleDate.finish%></time>
+                  </li>
+                  <li class="expire">유효기간 : 
+                    <time datetime="<%=coupon.useDate.start%>"><%=coupon.useDate.start%></time> ~
+                    <time datetime="<%=coupon.useDate.finish%>"><%=coupon.useDate.finish%></time>
                   </li>
                 </ul>                
               </section>

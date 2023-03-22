@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 
 // 오늘 메뉴
 router.get('/today', async function(req, res, next) {
-  var list = await model.couponList();
+  var list = await model.couponList(req.query);
   res.render('today', { list });
 });
 
@@ -66,7 +66,7 @@ router.get('/topCoupon', async function(req, res, next){
 });
 // 모두 메뉴
 router.get('/all', async function(req, res, next){
-  var list = await model.couponList();
+  var list = await model.couponList(req.query);
   res.render('all', {list});
 });
 // 쿠폰 남은 수량 조회
