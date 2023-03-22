@@ -17,7 +17,8 @@ router.get('/today', async function(req, res, next) {
 
 // 쿠폰 상세 조회
 router.get('/coupons/:_id', async function(req, res, next) {
-  var coupon = await model.couponDetail(Number(req.params._id));
+  var io = req.app.get('io');
+  var coupon = await model.couponDetail(io, Number(req.params._id));
   res.render('detail', { coupon, toStar: MyUtil.toStar });
 });
 
@@ -65,7 +66,8 @@ router.get('/topCoupon', async function(req, res, next){
 });
 // 모두 메뉴
 router.get('/all', async function(req, res, next){
-  res.render('all');
+  var list = await model.couponList();
+  res.render('all', {list});
 });
 // 쿠폰 남은 수량 조회
 router.get('/couponQuantity', async function(req, res, next){

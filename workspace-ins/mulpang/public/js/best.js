@@ -19,6 +19,10 @@ $(function(){
   $.getJSON('/topCoupon', {condition: 'satisfactionAvg'}, drawPointGraph);
   $.getJSON('/topCoupon', {condition: 'viewCount'}, drawViewGraph);
   $.getJSON('/topCoupon', {condition: 'epilogueCount'}, drawReplyGraph);
+
+  // 웹소켓 서버에 연결
+  var socket = io();
+  socket.on('top5', drawViewGraph);
 });
 
 // 판매순 그래프를 그린다.(Canvas)
