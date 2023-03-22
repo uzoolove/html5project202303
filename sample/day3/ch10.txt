@@ -1,0 +1,66 @@
+﻿10. 검색/정렬/페이징
+10.3 검색/정렬 조건 유지
+3) all.ejs에 적용
+• options() 함수 사용
+
+<label for="search_date">기간</label>
+<select id="search_date" name="date">
+  <%- options([['구매가능', 'buyable'], ['전체', 'all'], ['지난쿠폰', 'past']], query.date) %>
+</select>
+<label for="search_location">지역</label>
+<select id="search_location" name="location">
+  <%- options([['전체', ''], '강남', '압구정', '논현', '홍대', '신촌', '기타'], query.location) %>
+</select>
+<label for="search_keyword">키워드</label>
+<input type="text" id="search_keyword" name="keyword" value="<%=query.keyword%>">
+
+
+<label for="list_order">정렬</label>
+<select id="list_order" name="order">
+  <%- options([['최근순', 'saleDate.start'], ['평가순', 'satisfactionAvg'], ['판매순', 'buyQuantity']], query.order) %>
+</select>
+
+
+10.4 페이징
+2) router 수정
+
+router.get('/today', async function(req, res, next) {
+  if(req.query.page){
+    req.query.page = parseInt(req.query.page);
+  }else{
+    req.query.page = 1;
+    if(req.query.date){ req.url += '&page=1'; } else { req.url += '?page=1';}
+  }
+  var list = await model.couponList(req.query);
+  list.page = {};
+  if(req.query.page > 1){
+    list.page.pre = req.url.replace('page=' + req.query.page
+                                    , 'page=' + (req.query.page-1));
+  }
+  if(req.query.page < list.totalPage){
+    list.page.next = req.url.replace('page=' + req.query.page
+                                    , 'page=' + (req.query.page+1));
+  }  
+  res.render('today', {list: list, query: req.query, options:MyUtil.generateOptions});
+});
+
+
+3) today.ejs 수정
+	• 이전/다음 버튼에 링크 추가
+
+<div id="coupon_control">
+  <% if(list.page.pre){ %>
+    <a href="<%= list.page.pre %>"><button type="button" class="btn_pre">이전</button></a>
+  <% }else{ %>
+    <button type="button" class="btn_pre">이전</button>
+  <% } %>
+  <% if(list.page.next){ %>
+    <a href="<%= list.page.next %>"><button type="button" class="btn_next">다음</button></a>    
+  <% }else{ %>
+    <button type="button" class="btn_next">다음</button>
+  <% } %> 
+</div>
+
+
+
+

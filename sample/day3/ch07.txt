@@ -1,0 +1,59 @@
+﻿7. 근처 메뉴
+7.2 ejs 작성
+<div class="coupon_list">
+  <!--  쿠폰 목록 출력 영역 -->
+  <% list.forEach(function(coupon, i){ %>
+    <article data-lat="<%=coupon.position.lat%>" data-lng="<%=coupon.position.lng%>" tabindex="0">
+      <h1><%=coupon.couponName%></h1>
+      <a href="/coupons/<%=coupon._id%>">
+        <img class="detail_img" src="image/coupon/<%=coupon.image.detail.file%>" alt="<%=coupon.image.detail.desc%>">
+      </a>
+      <section class="content">
+        <p class="note">
+          <%=coupon.desc%>
+        </p>
+        <ul class="coupon_info">
+          <li class="cost">정상가격 : <del><%=coupon.primeCost%>원</del></li>
+          <li class="discount">할인가격 : <em><%=coupon.price%>원</em></li>
+          <li class="remain">잔여수량 : <span><%=coupon.quantity-coupon.buyQuantity%>개</span></li>
+          <li class="term">판매기간 : 
+            <time datetime="<%=coupon.saleDate.start%>"><%=coupon.saleDate.start%></time> ~ 
+            <time datetime="<%=coupon.saleDate.finish%>"><%=coupon.saleDate.finish%></time>
+            </li>
+          <li class="expire">유효기간 : 
+            <time datetime="<%=coupon.useDate.start%>"><%=coupon.useDate.start%></time> ~ 
+            <time datetime="<%=coupon.useDate.finish%>"><%=coupon.useDate.finish%></time>
+          </li>
+        </ul>
+      </section>
+    </article>			
+  <% }); %>
+</div>
+
+
+7.4 지도 상태 저장
+• location.js의 showSlider() 함수에 추가
+// 현재 위치를 history에 기록
+var center = map.getCenter();
+var qs = center.lat() + ',' + center.lng() + ',' + map.getZoom();
+var url = 'location?' + qs;
+window.history.replaceState({}, 'map', url);
+
+
+• location.js의 initMap() 함수에 추가
+var search = location.search.substring(1);
+function initMap(){
+  ......
+  if(search){
+    var qsArray = search.split(',');
+    mapOptions = {
+      center: {
+        lat: parseFloat(qsArray[0]), 
+        lng: parseFloat(qsArray[1])
+      },
+      zoom: parseInt(qsArray[2])
+    };
+  }
+  map = new google.maps.Map(mapContainer, mapOptions);
+  ......
+}
