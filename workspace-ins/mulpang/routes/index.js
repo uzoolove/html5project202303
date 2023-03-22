@@ -51,7 +51,8 @@ router.post('/purchase', validatePurchase, async function(req, res, next) {
 
 // 근처 메뉴
 router.get('/location', async function(req, res, next){
-  res.render('location');
+  var list = await model.couponList();
+  res.render('location', {list});
 });
 // 추천 메뉴
 router.get('/best', function(req, res, next){

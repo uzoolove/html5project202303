@@ -56,7 +56,7 @@ module.exports.couponList = async function(qs={}){
 	};
 	
 	// TODO 쿠폰 목록을 조회한다.
-	var count = 5;
+	var count = 0;
   var result = await db.coupon.find(query).project(fields).limit(count).toArray();
   return result;
 };
