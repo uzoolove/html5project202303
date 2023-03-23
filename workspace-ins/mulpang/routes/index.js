@@ -11,7 +11,24 @@ router.get('/', function(req, res, next) {
 
 // 오늘 메뉴
 router.get('/today', async function(req, res, next) {
+  if(req.query.page){
+    req.query.page = Number(req.query.page);
+  }else{
+    req.query.page = 1;
+    if(req.query.date){
+      req.url += '&page=1';
+    }else{
+      req.url += '?page=1';
+    }
+  }
   var list = await model.couponList(req.query);
+  list.page = {};
+  if(req.query.page > 1){
+    list.page.pre = req.url.replace('page=' + req.query.page, 'page=' + (req.query.page-1));
+  }
+  if(req.query.page < list.totalPage){
+    list.page.next = req.url.replace('page=' + req.query.page, 'page=' + (req.query.page+1));
+  }
   res.render('today', {list, query: req.query, options: MyUtil.generateOptions});
 });
 
