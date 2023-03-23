@@ -11,8 +11,25 @@ router.get('/', function(req, res, next) {
 
 // 오늘 메뉴
 router.get('/today', async function(req, res, next) {
+  if(req.query.page){
+    req.query.page = Number(req.query.page);
+  }else{
+    req.query.page = 1;
+    if(req.query.date){
+      req.url += '&page=1';
+    }else{
+      req.url += '?page=1';
+    }
+  }
   var list = await model.couponList(req.query);
-  res.render('today', { list });
+  list.page = {};
+  if(req.query.page > 1){
+    list.page.pre = req.url.replace('page=' + req.query.page, 'page=' + (req.query.page-1));
+  }
+  if(req.query.page < list.totalPage){
+    list.page.next = req.url.replace('page=' + req.query.page, 'page=' + (req.query.page+1));
+  }
+  res.render('today', {list, query: req.query, options: MyUtil.generateOptions});
 });
 
 // 쿠폰 상세 조회
@@ -67,7 +84,7 @@ router.get('/topCoupon', async function(req, res, next){
 // 모두 메뉴
 router.get('/all', async function(req, res, next){
   var list = await model.couponList(req.query);
-  res.render('all', {list});
+  res.render('all', {list, query: req.query, options: MyUtil.generateOptions});
 });
 // 쿠폰 남은 수량 조회
 router.get('/couponQuantity', async function(req, res, next){
