@@ -26,8 +26,11 @@ common.cart.showCart = function(){
 
   $('.interest_cnt').text(Object.keys(cart).length);
   common.cart.setRemoveCartEvent();
-  
+
   // TODO 알림메세지 승인시 관심쿠폰 수량 요청 시작
+  if(Notification.permission == 'granted'){
+    common.cart.requestQuantity();
+  }
   
 };
 
@@ -72,7 +75,12 @@ common.cart.requestQuantity = function(){
 
 // 바탕화면 알림 서비스를 보여준다.
 common.cart.showNoti = function(noti){	
-	
+	console.log(noti);
+  var notify = new Notification('마감임박!!!', noti);
+  Notification.onclick = function(){
+    notify.close();
+    window.open('/coupons/' + this.tag, '_blank');
+  };
 };
 
 
@@ -80,6 +88,13 @@ common.cart.showNoti = function(noti){
 common.upload.profileImage = function(){
 	// 파일을 선택한 후에 파일 선택을 취소했을 경우
 	if(this.files.length == 0) return;
+
+  if(this.files[0].size > 1024*1024*20){
+    alert('프로필 이미지는 최대 20MB까지 가능합니다.\n선택한 이미지 크기: ' 
+            + Math.round(this.files[0].size/1024/1024) + 'MB');
+    this.value = '';
+    return;
+  }  
 	
 	var progress = $('.form_section > form progress');
 	
@@ -132,7 +147,8 @@ common.login.setLoginEvent = function(){
       alert(result.errors.message);
     }else{
       // TODO 로그인 결과 출력
-      
+      alert('로그인 되었습니다.');
+      location.reload();
     }
   });
 };

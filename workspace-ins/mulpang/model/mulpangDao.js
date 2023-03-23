@@ -201,9 +201,12 @@ var topCoupon = module.exports.topCoupon = async function(condition){
   return list;
 };
 
-// 지정한 쿠폰 아이디 목록을 받아서 남은 수량을 넘겨준다.
+// 지정한 쿠폰 아이디 배열을 받아서 남은 수량을 넘겨준다.
 module.exports.couponQuantity = async function(coupons){
-
+  var list = await db.coupon.find(
+    {_id: {$in: coupons}}, 
+    {projection: {quantity: 1, buyQuantity: 1, couponName: 1}}).toArray();
+  return list;
 };
 
 // 임시로 저장한 프로필 이미지를 회원 이미지로 변경한다.
@@ -213,18 +216,61 @@ function saveImage(tmpFileName, profileImage){
   var org = path.join(tmpDir, tmpFileName);
   var dest = path.join(profileDir, profileImage);
 	// TODO 임시 이미지를 member 폴더로 이동시킨다.
-	
+	fs.rename(org, dest, function(err){
+    if(err) console.error(err);
+  });
 }
 
 // 회원 가입
 module.exports.registMember = async function(params){
-	
+	var member = {
+    _id: params._id,
+    password: params.password,
+    profileImage: params._id,
+    regDate: moment().format('YYYY-MM-DD hh:mm:ss')
+  };
+  try{
+    var result = await db.member.insertOne(member);
+    saveImage(params.tmpFileName, member.profileImage);
+    return result.insertedId;
+  }catch(err){
+    console.error(err);
+    if(err.code == 11000){
+      throw new Error('이미 등록된 이메일입니다.');
+    }else{
+      throw new Error('작업 처리에 실패했습니다. 잠시 후 다시 시도하시기 바랍니다.');
+    }
+  }
 };
 
 // 로그인 처리
 module.exports.login = async function(params){
 	// TODO 지정한 아이디와 비밀번호로 회원 정보를 조회한다.
-	
+	try{
+    // 아이디와 비밀번호 동시 체크
+    // var result = await db.member.findOne(params, {projection: {profileImage: 1}});
+
+    // 아이디와 비밀번호 따로 체크
+    // '해당 아이디가 존재하지 않습니다.'
+    // '비밀번호를 확인하시기 바랍니다.'
+    var result = await db.member.findOne({_id: params._id});
+  }catch(err){
+    console.error(err);
+    throw new Error('작업 처리에 실패했습니다. 잠시 후 다시 시도하시기 바랍니다.');
+  }
+
+  // if(!result){
+  //   throw new Error('아이디와 비밀번호를 확인하시기 바랍니다.');
+  // }
+
+  if(result){
+    if(params.password != result.password){
+      throw new Error('비밀번호를 확인하시기 바랍니다.');
+    }
+  }else{
+    throw new Error('해당 아이디가 존재하지 않습니다.');
+  }
+  return {_id: result._id, profileImage: result.profileImage};
 };
 
 // 회원 정보 조회

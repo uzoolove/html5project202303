@@ -59,6 +59,6 @@ function addCart(coupon){
     common.cart.showCart();
 
     // TODO 알림메세지 사용 여부 체크
-    
+    Notification.requestPermission();
   }
 }
