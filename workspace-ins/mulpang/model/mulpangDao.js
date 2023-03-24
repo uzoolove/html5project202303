@@ -119,7 +119,7 @@ module.exports.couponDetail = async function(io, _id){
       as: 'epilogueList'  // coupon.epilogueList 속성으로 조인 결과 추가
     }
   }]).next();
-  console.log(coupon);
+  console.log(coupon.couponName);
 
   // 뷰 카운트를 하나 증가시킨다.
 	await db.coupon.updateOne({_id}, {$inc: {viewCount: 1}});
