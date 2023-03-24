@@ -18,6 +18,12 @@ function getStatus(code){
     case 1004: 
       statusCode = 401;
       break;
+    case 1005:
+      statusCode = 400;
+      break;
+    case 1006:
+      statusCode = 400;
+      break;
   }
   return statusCode;
 }
@@ -40,6 +46,12 @@ function getMessage(code){
     case 1004: 
       message = '로그인이 필요한 서비스입니다.'
       break;
+    case 1005:
+      message = '비밀번호를 확인하시기 바랍니다.';
+      break;
+    case 1006:
+      message = '해당 아이디가 존재하지 않습니다.';
+      break;
   }
   return message;
 }
@@ -55,6 +67,8 @@ const MyError = {
   PASSWORD_INCRRECT: getError(1002),
   USER_DUPLICATE: getError(1003),
   LOGIN_NEED: getError(1004),
+  CHECK_PASSWORD: getError(1005),
+  CHECK_ID: getError(1006)
 };
 
 module.exports = MyError;

@@ -30,7 +30,8 @@ router.post('/new', async function(req, res, next) {
     var result = await model.registMember(req.body);
     res.end(result);
   }catch(err){
-    res.json({errors: {message: err.message}});
+    // res.json({errors: {message: err.message}});
+    next(err);
   }
 });
 // 간편 로그인
@@ -40,7 +41,8 @@ router.post('/simpleLogin', async function(req, res, next) {
     req.session.user = user;
     res.json(user);
   }catch(err){
-    res.json({errors: {message: err.message}});
+    // res.json({errors: {message: err.message}});
+    next(err);
   }
 });
 // 로그아웃
@@ -75,7 +77,8 @@ router.put('/', checklogin, async function(req, res, next) {
     await model.updateMember(userid, req.body);
     res.end('success');
   }catch(err){
-    res.json({errors: {message: err.message}});
+    // res.json({errors: {message: err.message}});
+    next(err);
   }
 });
 // 구매 후기 등록
@@ -91,7 +94,8 @@ router.post('/epilogue', checklogin, async function(req, res, next) {
     var epilogueId = await model.insertEpilogue(userid, epilogue);
     res.end(String(epilogueId));
   }catch(err){
-    res.json({errors: {message: err.message}});
+    // res.json({errors: {message: err.message}});
+    next(err);
   }
 });
 

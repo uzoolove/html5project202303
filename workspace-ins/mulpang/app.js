@@ -64,6 +64,14 @@ app.use(function(req, res, next) {
   next(createError(404, req.url + ' Not Found'));
 });
 
+app.use(function(err, req, res, next){
+  if(req.xhr){
+    res.json({errors: err});
+  }else{
+    next(err);
+  }
+});
+
 // error handler
 app.use(function(err, req, res, next) {
   console.error(err.stack);

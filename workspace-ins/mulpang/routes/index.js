@@ -66,7 +66,8 @@ router.post('/purchase', checklogin, validatePurchase, async function(req, res, 
     var purchaseId = await model.buyCoupon(req.body);
     res.end(String(purchaseId));
   }catch(err){
-    res.json({errors: {message: err.message}});
+    // res.json({errors: {message: err.message}});
+    next(err);
   }
 });
 
