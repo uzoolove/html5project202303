@@ -3,6 +3,7 @@ var router = express.Router();
 const model = require('../model/mulpangDao');
 const MyUtil = require('../utils/myutil');
 const { body, validationResult } = require('express-validator');
+const checklogin = require('../middleware/checklogin');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -40,7 +41,7 @@ router.get('/coupons/:_id', async function(req, res, next) {
 });
 
 // 쿠폰 구매 화면
-router.get('/purchase/:_id', async function(req, res, next) {
+router.get('/purchase/:_id', checklogin, async function(req, res, next) {
   var coupon = await model.buyCouponForm(Number(req.params._id));
   res.render('buy', { coupon });
 });
@@ -52,18 +53,20 @@ const validatePurchase = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       console.log(errors.array());
+      errors.array()[0].message = errors.array()[0].msg;
       return res.json({ errors: errors.array()[0] });
     }
     next();
   }
 ];
 // 쿠폰 구매
-router.post('/purchase', validatePurchase, async function(req, res, next) {
+router.post('/purchase', checklogin, validatePurchase, async function(req, res, next) {
   try{
+    req.body.userid = req.session.user._id;
     var purchaseId = await model.buyCoupon(req.body);
     res.end(String(purchaseId));
   }catch(err){
-    res.json({errors: {msg: err.message}});
+    res.json({errors: {message: err.message}});
   }
 });
 

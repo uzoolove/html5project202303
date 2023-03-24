@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const model = require('../model/mulpangDao');
 const MyUtil = require('../utils/myutil');
+const checklogin = require('../middleware/checklogin');
 
 // 회원 가입 화면
 router.get('/new', function(req, res, next) {
@@ -36,6 +37,7 @@ router.post('/new', async function(req, res, next) {
 router.post('/simpleLogin', async function(req, res, next) {
   try{
     var user = await model.login(req.body);
+    req.session.user = user;
     res.json(user);
   }catch(err){
     res.json({errors: {message: err.message}});
@@ -43,6 +45,7 @@ router.post('/simpleLogin', async function(req, res, next) {
 });
 // 로그아웃
 router.get('/logout', function(req, res, next) {
+  req.session.destroy();
   res.redirect('/');
 });
 // 로그인 화면
@@ -51,18 +54,28 @@ router.get('/login', function(req, res, next) {
 });
 // 로그인
 router.post('/login', async function(req, res, next) {
-  res.redirect('/');
+  try{
+    var user = await model.login(req.body);
+    req.session.user = user;
+    res.redirect(req.session.backurl || '/');
+  }catch(err){
+    res.render('login', {errors: err});
+  }
 });
 // 마이 페이지
-router.get('/', async function(req, res, next) {
-  res.render('mypage');
+router.get('/', checklogin, async function(req, res, next) {
+  var userid = req.session.user._id;
+  var member = await model.getMember(userid);
+  res.render('mypage', {purchases: member, toStar: MyUtil.toStar});
 });
 // 회원 정보 수정
-router.put('/', async function(req, res, next) {
+router.put('/', checklogin, async function(req, res, next) {
+  var userid = req.session.user._id;
   res.end('success');
 });
 // 구매 후기 등록
-router.post('/epilogue', async function(req, res, next) {
+router.post('/epilogue', checklogin, async function(req, res, next) {
+  var userid = req.session.user._id;
   res.end('success');
 });
 
