@@ -310,10 +310,46 @@ module.exports.getMember = async function(userid){
 
 // 회원 정보 수정
 module.exports.updateMember = async function(userid, params){
-	
+	var oldPassword = params.oldPassword;
+  try{
+    var member = await db.member.findOne({_id: userid, password: oldPassword});
+  }catch(err){
+    console.error(err);
+    throw new Error('작업 처리에 실패했습니다. 잠시 후 다시 시도하시기 바랍니다.');
+  }
+  if(member){
+    if(params.tmpFileName){
+      saveImage(params.tmpFileName, member.profileImage);
+    }
+    if(params.password.trim() != ''){
+      await db.member.updateOne({_id: userid}, {$set: {password: params.password}});
+    }
+  }else{
+    throw new Error('이전 비밀번호가 맞지 않습니다.');
+  }
 };
 
 // 쿠폰 후기 등록
-module.exports.insertEpilogue = async function(userid, params){
+module.exports.insertEpilogue = async function(userid, epilogue){
+  try{
+    var sequence = await db.sequence.findOneAndUpdate({_id: 'epilogue'}, {$inc: {seq: 1}});
+    epilogue._id = sequence.value.seq;
+    epilogue.writer = userid;
+    epilogue.regDate = moment().format('YYYY-MM-DD hh:mm:ss');
+
+    var epilogueResult = await db.epilogue.insertOne(epilogue);
+    await db.purchase.updateOne({_id: epilogue.purchaseId}, {$set: {epilogueId: epilogue._id}});
+    var coupon = await db.coupon.findOne({_id: epilogue.couponId});
+    var update = {
+      $inc: {epilogueCount: 1},
+      $set: {satisfactionAvg: (coupon.satisfactionAvg * coupon.epilogueCount + epilogue.satisfaction) / (coupon.epilogueCount+1)}
+    };
+    await db.coupon.updateOne({_id: epilogue.couponId}, update);
+    return epilogueResult.insertedId;
+  }catch(err){
+    console.error(err);
+    throw new Error('작업 처리에 실패했습니다. 잠시 후 다시 시도하시기 바랍니다.');
+  }
 	
+
 };

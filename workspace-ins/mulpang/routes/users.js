@@ -71,12 +71,28 @@ router.get('/', checklogin, async function(req, res, next) {
 // 회원 정보 수정
 router.put('/', checklogin, async function(req, res, next) {
   var userid = req.session.user._id;
-  res.end('success');
+  try{
+    await model.updateMember(userid, req.body);
+    res.end('success');
+  }catch(err){
+    res.json({errors: {message: err.message}});
+  }
 });
 // 구매 후기 등록
 router.post('/epilogue', checklogin, async function(req, res, next) {
   var userid = req.session.user._id;
-  res.end('success');
+  try{
+    var epilogue = {
+      couponId: Number(req.body.couponId),
+      purchaseId: Number(req.body.purchaseId),
+      satisfaction: Number(req.body.satisfaction),
+      content: req.body.content
+    };
+    var epilogueId = await model.insertEpilogue(userid, epilogue);
+    res.end(String(epilogueId));
+  }catch(err){
+    res.json({errors: {message: err.message}});
+  }
 });
 
 
